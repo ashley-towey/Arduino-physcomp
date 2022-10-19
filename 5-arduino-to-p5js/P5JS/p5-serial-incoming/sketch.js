@@ -2,11 +2,15 @@ let port;
 let connectBtn;
 let preVal = 0; // declare potentiometer base value to stop the sketch flickering
 let btnPreVal = 0; // declare button base value to stop the sketch flickering
-let btnClicks = 0;
+let buttonPushCounter = 0; // counter for the number of button presses
+// let buttonState = 0; // current state of the button
+let lastButtonState = 0; // previous state of the button
 
 function setup() {
   createCanvas(600, 600);
   background(220);
+  rectMode(CENTER);
+  textAlign(CENTER);
 
   port = createSerial();
 
@@ -38,25 +42,35 @@ function draw() {
       btnPreVal = btnVal;
     }
 
-    // print out the value of serial or val to the console
-    console.log(val, ' & ', btnVal, '+', btnClicks);
-
-  /* commenting out to test rotating between shapes
-  if (val.length > 0) {
-    //display the incoming data
-    fill(0);
-    text(val + ' & ' + btnVal, 10, height-20);
-    
-    //do something with the data!
-    noStroke();
-    fill(255,200,0);
-    ellipse(width/2,height/2,val,val);
+    // when the button is pressed change the state of shape
+    if (btnVal != lastButtonState) {
+      // if the state has changed, incremement the counter
+      if (btnVal == 1) {
+        buttonPushCounter++;
+      }
+    // changeShape();
   }
-*/
 
-  // when the button is pressed change the state of shape
-  if (btnVal > .5) {
-    changeShape();
+    // print out the value of serial or val to the console
+    console.log(val, ' & ', btnVal, '+', buttonPushCounter);
+
+  // drawing different shapes based on the buttonPushCounter
+  if (buttonPushCounter == 0) {
+    text('Click the button', width/2, height/2);
+  } else if (buttonPushCounter == 1) {
+    ellipse(width/2,height/2,val);
+  } else if (buttonPushCounter == 2) {
+    rect (width/2, height/2, val);
+  } else if (buttonPushCounter == 3){
+    push();
+      translate (width/2, height/2);
+      let triVal = map(val, 0, 1023, 0, 1023/2);
+      triangle(-triVal, triVal, 
+                0, -triVal, 
+                triVal, triVal);
+    pop();
+  } else {
+    // draw nothing
   }
 
   // changes button label based on connection status
@@ -65,6 +79,14 @@ function draw() {
   } else {
     connectBtn.html('Disconnect');
   }
+
+    //if statement to reset the button push counter
+    if (buttonPushCounter == 4) {
+      buttonPushCounter = 0;
+    }
+
+    // save the current state as the last state, for next time through the loop
+    lastButtonState = btnVal;
 }
 
 function connectBtnClick() {
@@ -81,5 +103,5 @@ function changeShape() {
   //   btnClicks + i;
     // text(val + ' & ' + btnVal + '+' + btnClicks, 10, height-20);
   //}
-  btnClicks + 1;
+  // btnClicks + 1;
 }
