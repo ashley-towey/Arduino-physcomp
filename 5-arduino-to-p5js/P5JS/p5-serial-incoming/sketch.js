@@ -5,23 +5,41 @@ let btnPreVal = 0; // declare button base value to stop the sketch flickering
 let buttonPushCounter = 0; // counter for the number of button presses
 let lastButtonState = 0; // previous state of the button
 
+let fillCol; // colour variable -> array
+let bgFillCol; // background colour variable -> array
+let c; // used as the colour counter for circle
+let s; // used as the colour counter for square
+let t; // used the colour counter for triangle
+let bg; // used the colour counter for background colour
+
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(windowWidth, windowHeight);
   background(220);
   rectMode(CENTER);
   textAlign(CENTER);
+  noStroke();
 
   port = createSerial();
+
+  // testing fill colors output
+  fillCol = [color('#c0392b'), color('#e67e22'), color('#f1c40f'), color('#2ecc71'), color('#3498db'), color('#8e44ad')]; // an array of fill colours
+  bgFillCol = [color('#e6f3ff'), color('#cce6ff'), color('#b3daff'), color('#80c1ff'), color('#339cff'), color('#004280')]; // an array of background colours
+  c = Math.round(random(0, 5)); // random circle colour
+  s = Math.round(random(0, 5)); // random square colour
+  t = Math.round(random(0, 5)); // random triangle colour
+  bg = Math.round(random(0, 5)); // random background colour
 
   // initial setup button
   connectBtn = createButton('Connect to Arduino');
   connectBtn.position(20, 20);
+  connectBtn.style('background-color', color(bgFillCol[bg]));
+  connectBtn.style('fill-color', '255');
+  connectBtn.style('font-size', '20px');
   connectBtn.mousePressed(connectBtnClick);
-
 }
 
 function draw() {
-  background(220);
+  background(color(bgFillCol[bg])); // random value from the fillCol array
 
   // reads in complete lines and prints them at the
   // bottom of the canvas
@@ -56,12 +74,21 @@ function draw() {
 
   // drawing different shapes based on the buttonPushCounter
   if (buttonPushCounter == 0) {
-    text('Click the button', width/2, height/2);
+    // intro text
+    textSize(20);
+    fill(0);
+    text('Connect the Arduino and click the button', width/2, height/2);
   } else if (buttonPushCounter == 1) {
+    // circle
+    fill(color(fillCol[c])); // random value from the fillCol array
     ellipse(width/2,height/2,val);
   } else if (buttonPushCounter == 2) {
+    // square
+    fill(color(fillCol[s])); // random value from the fillCol array
     rect (width/2, height/2, val);
   } else if (buttonPushCounter == 3){
+    // triangle
+    fill(color(fillCol[t])); // random value from the fillCol array
     push();
       translate (width/2, height/2);
       let triVal = map(val, 0, 1023, 0, 1023/2);
@@ -82,12 +109,14 @@ function draw() {
 
     //if statement to reset the button push counter once all the shapes are drawn
     if (buttonPushCounter == 4) {
-      buttonPushCounter = 0;
+      buttonPushCounter = 1;
     }
 
     // save the current state as the last state, for next time through the loop
     lastButtonState = btnVal;
 }
+
+
 
 // load the arduino into the sketch
 function connectBtnClick() {
