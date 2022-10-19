@@ -3,7 +3,6 @@ let connectBtn;
 let preVal = 0; // declare potentiometer base value to stop the sketch flickering
 let btnPreVal = 0; // declare button base value to stop the sketch flickering
 let buttonPushCounter = 0; // counter for the number of button presses
-// let buttonState = 0; // current state of the button
 let lastButtonState = 0; // previous state of the button
 
 function setup() {
@@ -31,6 +30,7 @@ function draw() {
   // potentiometer input
   let val = inputString.split(':')[0] || preVal; // splitting the input string and extracting the potentiometer value
   // change the value of preVal if val is communicated
+  // this ensures that the sketch does not flicker
     if (val) {
       preVal = val;
     }
@@ -38,6 +38,7 @@ function draw() {
     // button input
     let btnVal = inputString.split(':')[1] || btnPreVal; // splitting the input string and extracting the button value
     // change the value of preBtnVal if  btnVal is received
+    // this ensures that the sketch does not flicker
     if (btnVal) {
       btnPreVal = btnVal;
     }
@@ -48,11 +49,10 @@ function draw() {
       if (btnVal == 1) {
         buttonPushCounter++;
       }
-    // changeShape();
   }
 
-    // print out the value of serial or val to the console
-    console.log(val, ' & ', btnVal, '+', buttonPushCounter);
+    // print out the potentiometer, button presses and total number of button presses
+    console.log('Potentiometer:', val, '//', 'Button press:', btnVal, '//', 'Button counter:', buttonPushCounter);
 
   // drawing different shapes based on the buttonPushCounter
   if (buttonPushCounter == 0) {
@@ -70,7 +70,7 @@ function draw() {
                 triVal, triVal);
     pop();
   } else {
-    // draw nothing
+    // draw nothing before loading the text again
   }
 
   // changes button label based on connection status
@@ -80,7 +80,7 @@ function draw() {
     connectBtn.html('Disconnect');
   }
 
-    //if statement to reset the button push counter
+    //if statement to reset the button push counter once all the shapes are drawn
     if (buttonPushCounter == 4) {
       buttonPushCounter = 0;
     }
@@ -89,19 +89,11 @@ function draw() {
     lastButtonState = btnVal;
 }
 
+// load the arduino into the sketch
 function connectBtnClick() {
   if (!port.opened()) {
     port.open('Arduino', 9600);
   } else {
     port.close();
   }
-}
-
-// function to rotate between three different shapes & called when the button is pressed
-function changeShape() {
-  // for (let i = 0; i > 2; i++){
-  //   btnClicks + i;
-    // text(val + ' & ' + btnVal + '+' + btnClicks, 10, height-20);
-  //}
-  // btnClicks + 1;
 }
