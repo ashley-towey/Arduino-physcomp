@@ -33,8 +33,7 @@ function setup() {
   connectBtn = createButton('Connect to Arduino');
   connectBtn.position(20, 20);
   connectBtn.style('background-color', color(bgFillCol[bg]));
-  connectBtn.style('fill-color', '255');
-  connectBtn.style('font-size', '20px');
+  connectBtn.style('font-size', '15px');
   connectBtn.mousePressed(connectBtnClick);
 }
 
@@ -75,27 +74,33 @@ function draw() {
   // drawing different shapes based on the buttonPushCounter
   if (buttonPushCounter == 0) {
     // intro text
-    textSize(20);
+    textSize(15);
     fill(0);
     text('Connect the Arduino and click the button', width/2, height/2);
   } else if (buttonPushCounter == 1) {
     // circle
     fill(color(fillCol[c])); // random value from the fillCol array
     ellipse(width/2,height/2,val);
+    fill(255);
+    text('Circle', width/2, height/2);
   } else if (buttonPushCounter == 2) {
     // square
     fill(color(fillCol[s])); // random value from the fillCol array
     rect (width/2, height/2, val);
+    fill(255);
+    text('Square', width/2, height/2);
   } else if (buttonPushCounter == 3){
     // triangle
     fill(color(fillCol[t])); // random value from the fillCol array
     push();
-      translate (width/2, height/2);
+      translate (width/2, height/2.1);
       let triVal = map(val, 0, 1023, 0, 1023/2);
       triangle(-triVal, triVal, 
                 0, -triVal, 
                 triVal, triVal);
     pop();
+    fill(255);
+    text('Triangle', width/2, height/2);
   } else {
     // draw nothing before loading the text again
   }
