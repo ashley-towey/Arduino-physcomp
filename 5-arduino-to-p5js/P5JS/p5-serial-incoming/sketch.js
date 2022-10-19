@@ -81,5 +81,5 @@ function changeShape() {
   //   btnClicks + i;
     // text(val + ' & ' + btnVal + '+' + btnClicks, 10, height-20);
   //}
-  btnClicks + 1
+  btnClicks + 1;
 }
